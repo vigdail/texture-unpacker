@@ -9,18 +9,23 @@ pub struct SpriteSheet {
 }
 
 impl SpriteSheet {
-	pub fn load(sprite_path: &str, json_path: &str) -> SpriteSheet {
-		let image = image::open(sprite_path).unwrap();
-		let sheet = Atlas::from_file(json_path);
+	pub fn load(sprite_path: &str, json_path: &str) -> Option<SpriteSheet> {
+		let image = match image::open(sprite_path) {
+			Ok(i) => i,
+			Err(_) => {
+				return None;
+			}
+		};
+		let sheet = Atlas::from_file(json_path).unwrap();
 
-		SpriteSheet {
+		Some(SpriteSheet {
 			sprite: image,
 			sheet,
-		}
+		})
 	}
 
-	pub fn unpack(&mut self) -> Result<(), ()> {
-		for image in self.sheet.frames.iter() {
+	pub fn unpack(&mut self, path: &str) -> Result<(), ()> {
+		for (i, image) in self.sheet.frames.iter().enumerate() {
 			let image: Sprite = image.clone();
 			let frame: Frame = image.frame;
 
@@ -35,14 +40,17 @@ impl SpriteSheet {
 				sprite = SpriteSheet::build(&sprite, image.sourceSize, image.spriteSourceSize);
 			}
 
-			let s = &format!("res/files/{}.png", &image.filename);
+			let s = &format!("{}/{}.png", path, &image.filename);
 			let path = std::path::Path::new(s);
 			let dir = path.parent().unwrap();
 			if !dir.exists() {
 				std::fs::create_dir_all(dir).unwrap();
 			}
-			println!("{:?}", path);
-			sprite.save(path).unwrap();
+			let percent = (i + 1) as f32 / self.sheet.frames.len() as f32 * 100.0;
+			match sprite.save(path) {
+				Ok(_) => println!("{}% saved: {}", percent as u32, image.filename),
+				Err(e) => println!("{}% skipped: {}: {}", percent as u32, image.filename, e),
+			}
 		}
 
 		Ok(())
