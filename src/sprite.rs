@@ -29,5 +29,5 @@ pub struct Sprite {
 	pub trimmed: bool,
 	pub spriteSourceSize: Frame,
 	pub sourceSize: Size,
-	// pub pivot: Point, // @TODO make this field optional
+	pub pivot: Option<Point>,
 }

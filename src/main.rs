@@ -23,6 +23,12 @@ fn main() {
 	let mut opts = Options::new();
 	opts.optopt("o", "", "set output dir", "DIR");
 	opts.optflag("h", "help", "prints this help menu");
+	opts.optopt(
+		"t",
+		"type",
+		"type of atlas [json/xml], default is json",
+		"TYPE",
+	);
 
 	let matches = opts.parse(&args[1..]).unwrap();
 	if matches.opt_present("h") {
@@ -35,6 +41,11 @@ fn main() {
 		None => String::from("./"),
 	};
 
+	let atlas_type = match matches.opt_str("t") {
+		Some(t) => t,
+		None => String::from("json"),
+	};
+
 	let input = match matches.free.get(0) {
 		Some(i) => i,
 		None => {
@@ -44,11 +55,11 @@ fn main() {
 	};
 
 	let image_name = format!("{}.png", input);
-	let json_name = format!("{}.json", input);;
-	let mut atlas = match SpriteSheet::load(image_name.as_str(), json_name.as_str()) {
-		Some(a) => a,
-		None => {
-			println!("File: {} skipped", image_name);
+	let atlas_name = format!("{}.{}", input, atlas_type);
+	let mut atlas = match SpriteSheet::load(image_name.as_str(), atlas_name.as_str()) {
+		Ok(a) => a,
+		Err(e) => {
+			println!("File: {} skipped (Reason: {})", image_name, e);
 			return;
 		}
 	};

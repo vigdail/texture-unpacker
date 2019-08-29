@@ -9,16 +9,16 @@ pub struct SpriteSheet {
 }
 
 impl SpriteSheet {
-	pub fn load(sprite_path: &str, json_path: &str) -> Option<SpriteSheet> {
+	pub fn load(sprite_path: &str, atlas_path: &str) -> Result<SpriteSheet, String> {
 		let image = match image::open(sprite_path) {
 			Ok(i) => i,
 			Err(_) => {
-				return None;
+				return Err(String::from("Error: can't open image file"));
 			}
 		};
-		let sheet = Atlas::from_file(json_path).unwrap();
+		let sheet = Atlas::from_file(atlas_path).unwrap();
 
-		Some(SpriteSheet {
+		Ok(SpriteSheet {
 			sprite: image,
 			sheet,
 		})

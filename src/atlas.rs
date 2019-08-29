@@ -10,14 +10,21 @@ pub struct Atlas {
 }
 
 impl Atlas {
-	// @TODO return value should be an Option
-	pub fn from_file(path: &str) -> Result<Atlas,()>{
+	pub fn from_file(path: &str) -> Result<Atlas, std::io::Error> {
 		let mut buffer: String = String::new();
-		let mut file = File::open(path).unwrap();
-		file.read_to_string(&mut buffer).unwrap();
+
+		let mut file = match File::open(path) {
+			Ok(f) => f,
+			Err(e) => return Err(e),
+		};
+
+		match file.read_to_string(&mut buffer) {
+			Err(e) => return Err(e),
+			_ => {}
+		};
 
 		let atlas: Atlas = serde_json::from_str(&buffer.as_str()).unwrap();
 
-		Result::Ok(atlas)
+		Ok(atlas)
 	}
 }
