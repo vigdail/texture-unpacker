@@ -16,7 +16,10 @@ impl SpriteSheet {
 				return Err(String::from("Error: can't open image file"));
 			}
 		};
-		let sheet = Atlas::from_file(atlas_path).unwrap();
+		let sheet = match Atlas::from_file(atlas_path) {
+			Ok(s) => s,
+			Err(e) => return Err(e),
+		};
 
 		Ok(SpriteSheet {
 			sprite: image,

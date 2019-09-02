@@ -1,6 +1,7 @@
 mod atlas;
 mod sprite;
 mod spritesheet;
+mod xml_atlas;
 
 extern crate getopts;
 extern crate image;
@@ -42,7 +43,7 @@ fn main() {
 	};
 
 	let atlas_type = match matches.opt_str("t") {
-		Some(t) => t,
+		Some(t) => String::from(t.trim()),
 		None => String::from("json"),
 	};
 
