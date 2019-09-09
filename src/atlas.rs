@@ -1,4 +1,5 @@
-use crate::sprite::Sprite;
+use crate::sprite::{Frame, Size, Sprite};
+use crate::xml_atlas:: XmlAtlas;
 
 use serde::{Deserialize, Serialize};
 use std::fs::File;
@@ -44,6 +45,38 @@ impl Atlas {
 	}
 
 	fn from_xml(buffer: &str) -> Result<Atlas, String> {
-		Err(String::from("Xml reader is not implemented yet"))
+		let xml = XmlAtlas::from_buffer(buffer);
+
+		let xml_frames = xml.TextureAtlas;
+
+		let mut frames = Vec::<Sprite>::new();
+		for frame in xml_frames.iter() {
+			let sprite = Sprite {
+				filename: frame.name.clone(),
+				frame: Frame {
+					x: frame.frameX as u32,
+					y: frame.frameY as u32,
+					w: frame.frameWidth as u32,
+					h: frame.frameHeight as u32,
+				},
+				rotated: false,
+				trimmed: false,
+				spriteSourceSize: Frame {
+					x: frame.frameX as u32,
+					y: frame.frameY as u32,
+					w: frame.frameWidth as u32,
+					h: frame.frameHeight as u32,
+				},
+				sourceSize: Size {
+					w: frame.frameWidth as u32,
+					h: frame.frameHeight as u32,
+				},
+				pivot: None,
+			};
+			frames.push(sprite);
+		}
+
+		let atlas = Atlas { frames };
+		Ok(atlas)
 	}
 }
