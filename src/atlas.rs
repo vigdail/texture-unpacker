@@ -1,5 +1,5 @@
 use crate::sprite::{Frame, Size, Sprite};
-use crate::xml_atlas:: XmlAtlas;
+use crate::xml_atlas::XmlAtlas;
 
 use serde::{Deserialize, Serialize};
 use std::fs::File;
@@ -54,25 +54,44 @@ impl Atlas {
 			let sprite = Sprite {
 				filename: frame.name.clone(),
 				frame: Frame {
-					x: frame.frameX as u32,
-					y: frame.frameY as u32,
-					w: frame.frameWidth as u32,
-					h: frame.frameHeight as u32,
+					x: match frame.x {
+						Some(x) => x,
+						None => 0,
+					},
+					y: match frame.y {
+						Some(y) => y,
+						None => 0,
+					},
+					w: match frame.width {
+						Some(width) => width,
+						None => frame.frameWidth,
+					},
+					h: match frame.height {
+						Some(height) => height,
+						None => frame.frameHeight,
+					},
 				},
 				rotated: false,
-				trimmed: false,
 				spriteSourceSize: Frame {
-					x: frame.frameX as u32,
-					y: frame.frameY as u32,
-					w: frame.frameWidth as u32,
-					h: frame.frameHeight as u32,
+					x: frame.frameX.abs() as u32,
+					y: frame.frameY.abs() as u32,
+					w: frame.frameWidth,
+					h: frame.frameHeight,
 				},
 				sourceSize: Size {
-					w: frame.frameWidth as u32,
-					h: frame.frameHeight as u32,
+					w: frame.frameWidth,
+					h: frame.frameHeight,
+				},
+				trimmed: if Some(frame.frameWidth) == frame.width
+					&& Some(frame.frameHeight) == frame.height
+				{
+					false
+				} else {
+					true
 				},
 				pivot: None,
 			};
+			println!("{:?}", sprite);
 			frames.push(sprite);
 		}
 
