@@ -1,5 +1,4 @@
-use std::io::Read;
-use std::path::Path;
+use std::num::ParseIntError;
 
 #[allow(non_snake_case)]
 #[derive(Debug)]
@@ -22,8 +21,9 @@ pub struct XmlAtlas {
 }
 
 impl XmlAtlas {
-	pub fn from_buffer(buffer: &str) -> XmlAtlas {
-		let root: minidom::Element = buffer.parse().unwrap();
+
+    pub fn from_str(s: &str) -> Result<Self, ParseIntError> {
+		let root: minidom::Element = s.parse().unwrap();
 		let mut frames = Vec::<SubTexture>::new();
 		for child in root.children() {
 			if child.name() == "SubTexture" {
@@ -36,30 +36,26 @@ impl XmlAtlas {
 					frameX: child
 						.attr("frameX")
 						.map(|x| x.parse::<i32>())
-						.unwrap()
-						.unwrap(),
+						.unwrap()?,
 					frameY: child
 						.attr("frameY")
 						.map(|x| x.parse::<i32>())
-						.unwrap()
-						.unwrap(),
+						.unwrap()?,
 					frameWidth: child
 						.attr("frameWidth")
 						.map(|x| x.parse::<u32>())
-						.unwrap()
-						.unwrap(),
+						.unwrap()?,
 					frameHeight: child
 						.attr("frameHeight")
 						.map(|x| x.parse::<u32>())
-						.unwrap()
-						.unwrap(),
+						.unwrap()?,
 				};
 				frames.push(sub_texture);
 			}
 		}
 
-		XmlAtlas {
+		Ok(XmlAtlas {
 			TextureAtlas: frames,
-		}
+		})
 	}
 }

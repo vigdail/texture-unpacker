@@ -45,7 +45,10 @@ impl Atlas {
 	}
 
 	fn from_xml(buffer: &str) -> Result<Atlas, String> {
-		let xml = XmlAtlas::from_buffer(buffer);
+		let xml = match XmlAtlas::from_str(buffer) {
+			Ok(atlas) => atlas,
+			Err(e) => return Err(format!("Can not parse xml: {}", e)),
+		};
 
 		let xml_frames = xml.TextureAtlas;
 
@@ -91,7 +94,6 @@ impl Atlas {
 				},
 				pivot: None,
 			};
-			println!("{:?}", sprite);
 			frames.push(sprite);
 		}
 
