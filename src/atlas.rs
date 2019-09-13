@@ -64,27 +64,43 @@ impl Atlas {
 					},
 					w: match frame.width {
 						Some(width) => width,
-						None => frame.frameWidth,
+						None => 0,
 					},
 					h: match frame.height {
 						Some(height) => height,
-						None => frame.frameHeight,
+						None => 0,
 					},
 				},
 				rotated: false,
 				spriteSourceSize: Frame {
-					x: frame.frameX.abs() as u32,
-					y: frame.frameY.abs() as u32,
-					w: frame.frameWidth,
-					h: frame.frameHeight,
+					x: match frame.frameX {
+						Some(frame_x) => frame_x.abs() as u32,
+						None => 0,
+					},
+					y: match frame.frameX {
+						Some(frame_y) => frame_y.abs() as u32,
+						None => 0,
+					},
+					w: match frame.frameWidth {
+						Some(width) => width,
+						None => frame.width.unwrap(),
+					},
+					h: match frame.frameHeight {
+						Some(height) => height,
+						None => frame.height.unwrap(),
+					},
 				},
 				sourceSize: Size {
-					w: frame.frameWidth,
-					h: frame.frameHeight,
+					w: match frame.frameWidth {
+						Some(width) => width,
+						None => frame.width.unwrap(),
+					},
+					h: match frame.frameHeight {
+						Some(height) => height,
+						None => frame.height.unwrap(),
+					},
 				},
-				trimmed: if Some(frame.frameWidth) == frame.width
-					&& Some(frame.frameHeight) == frame.height
-				{
+				trimmed: if frame.frameWidth == frame.width && frame.frameHeight == frame.height {
 					false
 				} else {
 					true
