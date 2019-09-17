@@ -77,7 +77,7 @@ impl Atlas {
 						Some(frame_x) => frame_x.abs() as u32,
 						None => 0,
 					},
-					y: match frame.frameX {
+					y: match frame.frameY {
 						Some(frame_y) => frame_y.abs() as u32,
 						None => 0,
 					},
