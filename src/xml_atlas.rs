@@ -4,10 +4,10 @@ use std::num::ParseIntError;
 #[derive(Debug)]
 pub struct SubTexture {
 	pub name: String,
-	pub x: Option<u32>,
-	pub y: Option<u32>,
-	pub width: Option<u32>,
-	pub height: Option<u32>,
+	pub x: u32,
+	pub y: u32,
+	pub width: u32,
+	pub height: u32,
 	pub frameX: Option<i32>,
 	pub frameY: Option<i32>,
 	pub frameWidth: Option<u32>,
@@ -28,10 +28,10 @@ impl XmlAtlas {
 			if child.name() == "SubTexture" {
 				let sub_texture = SubTexture {
 					name: String::from(child.attr("name").unwrap()),
-					x: child.attr("x").map(|x| x.parse::<u32>().unwrap()),
-					y: child.attr("y").map(|y| y.parse::<u32>().unwrap()),
-					width: child.attr("width").map(|x| x.parse::<u32>().unwrap()),
-					height: child.attr("height").map(|x| x.parse::<u32>().unwrap()),
+					x: child.attr("x").map(|x| x.parse::<u32>()).unwrap()?,
+					y: child.attr("y").map(|y| y.parse::<u32>()).unwrap()?,
+					width: child.attr("width").map(|x| x.parse::<u32>()).unwrap()?,
+					height: child.attr("height").map(|x| x.parse::<u32>()).unwrap()?,
 					frameX: child.attr("frameX").map(|x| x.parse::<i32>().unwrap()),
 					frameY: child.attr("frameY").map(|x| x.parse::<i32>().unwrap()),
 					frameWidth: child.attr("frameWidth").map(|x| x.parse::<u32>().unwrap()),

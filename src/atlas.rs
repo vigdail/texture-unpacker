@@ -57,57 +57,23 @@ impl Atlas {
 			let sprite = Sprite {
 				filename: frame.name.clone(),
 				frame: Frame {
-					x: match frame.x {
-						Some(x) => x,
-						None => 0,
-					},
-					y: match frame.y {
-						Some(y) => y,
-						None => 0,
-					},
-					w: match frame.width {
-						Some(width) => width,
-						None => 0,
-					},
-					h: match frame.height {
-						Some(height) => height,
-						None => 0,
-					},
+					x: frame.x,
+					y: frame.y,
+					w: frame.width,
+					h: frame.height,
 				},
 				rotated: false,
 				spriteSourceSize: Frame {
-					x: match frame.frameX {
-						Some(frame_x) => frame_x.abs() as u32,
-						None => 0,
-					},
-					y: match frame.frameY {
-						Some(frame_y) => frame_y.abs() as u32,
-						None => 0,
-					},
-					w: match frame.frameWidth {
-						Some(width) => width,
-						None => frame.width.unwrap(),
-					},
-					h: match frame.frameHeight {
-						Some(height) => height,
-						None => frame.height.unwrap(),
-					},
+					x: frame.frameX.map(|x| x.abs() as u32).unwrap_or(0),
+					y: frame.frameY.map(|y| y.abs() as u32).unwrap_or(0),
+					w: frame.frameWidth.unwrap_or(frame.width),
+					h: frame.frameHeight.unwrap_or(frame.height),
 				},
 				sourceSize: Size {
-					w: match frame.frameWidth {
-						Some(width) => width,
-						None => frame.width.unwrap(),
-					},
-					h: match frame.frameHeight {
-						Some(height) => height,
-						None => frame.height.unwrap(),
-					},
+					w: frame.frameWidth.unwrap_or(frame.width),
+					h: frame.frameHeight.unwrap_or(frame.height),
 				},
-				trimmed: if frame.frameWidth == frame.width && frame.frameHeight == frame.height {
-					false
-				} else {
-					true
-				},
+				trimmed: frame.frameWidth.is_some() || frame.frameHeight.is_some(),
 				pivot: None,
 			};
 			frames.push(sprite);
