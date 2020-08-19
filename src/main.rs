@@ -3,11 +3,6 @@ mod sprite;
 mod spritesheet;
 mod xml_atlas;
 
-extern crate getopts;
-extern crate image;
-extern crate serde;
-extern crate serde_json;
-
 use getopts::Options;
 use spritesheet::SpriteSheet;
 use std::env;
