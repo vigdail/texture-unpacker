@@ -1,12 +1,12 @@
 [package]
+authors = ["Vigdail <vigdail.dev@gmail.com>"]
+edition = "2018"
 name = "texture-unpacker"
 version = "0.1.0"
-authors = ["Vigdail"]
-edition = "2018"
 
 [dependencies]
-serde = { version = "*", features = ["derive"] }
-serde_json="1.0.40"
-image="0.22"
-getopts="0.2.21"
-minidom="0.11.0"
+getopts = "0.2.21"
+image = "0.22"
+minidom = "0.11.0"
+serde = {version = "*", features = ["derive"]}
+serde_json = "1.0.40"
