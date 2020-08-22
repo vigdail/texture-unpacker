@@ -1,49 +1,27 @@
-use getopts::Options;
-use std::env;
+use structopt::StructOpt;
 use texture_unpacker::SpriteSheet;
 
-fn print_usage(program: &str, opts: Options) {
-    let brief = format!("Usage: {} FILE [options]", program);
-    println!("{}", opts.usage(&brief));
+#[derive(StructOpt)]
+struct Config {
+    #[structopt(short = "o", help = "set output dir")]
+    dir: Option<String>,
+    #[structopt(short, long, default_value = "json", help = "format of atlas")]
+    format: String,
+    #[structopt(help = "path to altas file")]
+    path: String,
 }
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    let program = args[0].clone();
+    let config: Config = Config::from_args();
 
-    let mut opts = Options::new();
-    opts.optopt("o", "", "set output dir", "DIR");
-    opts.optflag("h", "help", "prints this help menu");
-    opts.optopt(
-        "t",
-        "type",
-        "type of atlas [json/xml], default is json",
-        "TYPE",
-    );
-
-    let matches = opts.parse(&args[1..]).unwrap();
-    if matches.opt_present("h") {
-        print_usage(&program, opts);
-        return;
-    }
-
-    let output = match matches.opt_str("o") {
+    let output = match config.dir {
         Some(o) => o,
         None => String::from("./"),
     };
 
-    let atlas_type = match matches.opt_str("t") {
-        Some(t) => String::from(t.trim()),
-        None => String::from("json"),
-    };
+    let atlas_type = config.format;
 
-    let input = match matches.free.get(0) {
-        Some(i) => i,
-        None => {
-            print_usage(&program, opts);
-            return;
-        }
-    };
+    let input = config.path;
 
     let image_name = format!("{}.png", input);
     let atlas_name = format!("{}.{}", input, atlas_type);
