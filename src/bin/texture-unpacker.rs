@@ -2,12 +2,13 @@ use structopt::StructOpt;
 use texture_unpacker::SpriteSheet;
 
 #[derive(StructOpt)]
+#[structopt(author)]
 struct Config {
     #[structopt(short = "o", default_value = ".", help = "set output dir")]
     dir: String,
     #[structopt(short, long, default_value = "json", help = "format of atlas")]
     format: String,
-    #[structopt(help = "path to altas file")]
+    #[structopt(help = "path to atlas file")]
     path: String,
 }
 
