@@ -50,7 +50,7 @@ impl Atlas {
     fn from_xml(buffer: &str) -> Result<Atlas, Error> {
         let xml = SparrowAtlas::from_str(buffer)?;
 
-        let xml_frames = xml.TextureAtlas;
+        let xml_frames = xml.sub_textures;
 
         let mut frames = Vec::<Sprite>::new();
         for frame in xml_frames.iter() {
