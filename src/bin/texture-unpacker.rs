@@ -3,8 +3,8 @@ use texture_unpacker::SpriteSheet;
 
 #[derive(StructOpt)]
 struct Config {
-    #[structopt(short = "o", help = "set output dir")]
-    dir: Option<String>,
+    #[structopt(short = "o", default_value = ".", help = "set output dir")]
+    dir: String,
     #[structopt(short, long, default_value = "json", help = "format of atlas")]
     format: String,
     #[structopt(help = "path to altas file")]
@@ -14,11 +14,7 @@ struct Config {
 fn main() {
     let config: Config = Config::from_args();
 
-    let output = match config.dir {
-        Some(o) => o,
-        None => String::from("./"),
-    };
-
+    let output_dir = config.dir;
     let atlas_type = config.format;
 
     let input = config.path;
@@ -32,7 +28,7 @@ fn main() {
             return;
         }
     };
-    match atlas.unpack(output.as_str()) {
+    match atlas.unpack(output_dir.as_str()) {
         Ok(_) => println!("Complete"),
         Err(_) => println!("Error: can't unpack spritesheet"),
     };
