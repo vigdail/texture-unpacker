@@ -1,5 +1,4 @@
 use serde::Deserialize;
-use serde_xml_rs::from_str;
 
 #[allow(non_snake_case)]
 #[derive(Debug, Deserialize)]
@@ -28,6 +27,6 @@ pub struct SparrowAtlas {
 
 impl SparrowAtlas {
     pub fn from_str(s: &str) -> Result<Self, serde_xml_rs::Error> {
-        Ok(from_str::<SparrowAtlas>(s)?)
+        serde_xml_rs::from_str::<SparrowAtlas>(s)
     }
 }
