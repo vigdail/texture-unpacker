@@ -1,5 +1,5 @@
 use crate::sprite::{Frame, Size, Sprite};
-use crate::{error::Error, xml_atlas::XmlAtlas};
+use crate::{error::Error, sparrow_atlas::SparrowAtlas};
 
 use serde::{Deserialize, Serialize};
 use std::fs::File;
@@ -48,7 +48,7 @@ impl Atlas {
     }
 
     fn from_xml(buffer: &str) -> Result<Atlas, Error> {
-        let xml = XmlAtlas::from_str(buffer)?;
+        let xml = SparrowAtlas::from_str(buffer)?;
 
         let xml_frames = xml.TextureAtlas;
 
