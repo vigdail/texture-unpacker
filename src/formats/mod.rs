@@ -79,42 +79,6 @@ impl Atlas {
     }
 
     fn from_xml(buffer: &str) -> Result<Atlas, Error> {
-        let xml = SparrowAtlas::from_str(buffer)?;
-
-        let xml_frames = xml.sub_textures;
-
-        let mut frames = Vec::<Frame>::new();
-        for frame in xml_frames.iter() {
-            let sprite = Frame {
-                name: frame.name.clone(),
-                position: Point {
-                    x: frame.x,
-                    y: frame.y,
-                },
-                size: Size {
-                    w: frame.width,
-                    h: frame.height,
-                },
-                rotated: false,
-                bound: Rect {
-                    x: frame.frameX.map(|x| x.abs() as u32).unwrap_or(0),
-                    y: frame.frameY.map(|y| y.abs() as u32).unwrap_or(0),
-                    w: frame.frameWidth.unwrap_or(frame.width),
-                    h: frame.frameHeight.unwrap_or(frame.height),
-                },
-                trimmed: frame.frameWidth.is_some() || frame.frameHeight.is_some(),
-            };
-            frames.push(sprite);
-        }
-
-        let atlas = Atlas {
-            image_path: xml.image_path,
-            size: Size {
-                w: xml.width,
-                h: xml.height,
-            },
-            frames,
-        };
-        Ok(atlas)
+        Ok(SparrowAtlas::from_str(buffer)?.into())
     }
 }
