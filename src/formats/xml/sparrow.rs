@@ -14,11 +14,11 @@ pub struct SubTexture {
     pub frameHeight: Option<u32>,
 }
 
-#[allow(non_snake_case)]
 #[derive(Debug, Deserialize)]
 #[serde(rename = "TextureAtlas")]
 pub struct SparrowAtlas {
-    pub imagePath: String,
+    #[serde(rename = "imagePath")]
+    pub image_path: String,
     pub width: u32,
     pub height: u32,
     #[serde(rename = "SubTexture", default)]

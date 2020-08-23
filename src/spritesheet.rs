@@ -1,7 +1,6 @@
-use crate::atlas::Atlas;
 use crate::{
     error::Error,
-    sprite::{Frame, Size, Sprite},
+    formats::{Atlas, Rect},
 };
 
 use image::DynamicImage;
@@ -25,21 +24,22 @@ impl SpriteSheet {
 
     pub fn unpack(&mut self, path: &str) -> Result<(), ()> {
         for (i, image) in self.sheet.frames.iter().enumerate() {
-            let image: Sprite = image.clone();
-            let frame: Frame = image.frame;
+            let image = image.clone();
+            let position = image.position;
+            let size = image.size;
 
             let mut sprite: DynamicImage;
             if image.rotated {
-                sprite = self.sprite.crop(frame.y, frame.x, frame.h, frame.w);
+                sprite = self.sprite.crop(position.y, position.x, size.h, size.w);
             } else {
-                sprite = self.sprite.crop(frame.x, frame.y, frame.w, frame.h);
+                sprite = self.sprite.crop(position.x, position.y, size.w, size.h);
             };
 
             if image.trimmed {
-                sprite = SpriteSheet::build(&sprite, image.sourceSize, image.spriteSourceSize);
+                sprite = SpriteSheet::build(&sprite, image.bound);
             }
 
-            let s = &format!("{}/{}.png", path, &image.filename);
+            let s = &format!("{}/{}.png", path, &image.name);
             let path = std::path::Path::new(s);
             let dir = path.parent().unwrap();
             if !dir.exists() {
@@ -47,18 +47,18 @@ impl SpriteSheet {
             }
             let percent = (i + 1) as f32 / self.sheet.frames.len() as f32 * 100.0;
             match sprite.save(path) {
-                Ok(_) => println!("{}% saved: {}", percent as u32, image.filename),
-                Err(e) => println!("{}% skipped: {}: {}", percent as u32, image.filename, e),
+                Ok(_) => println!("{}% saved: {}", percent as u32, image.name),
+                Err(e) => println!("{}% skipped: {}: {}", percent as u32, image.name, e),
             }
         }
 
         Ok(())
     }
 
-    fn build(image: &DynamicImage, size: Size, source_size: Frame) -> DynamicImage {
-        let mut bottom = DynamicImage::new_rgba8(size.w, size.h);
+    fn build(image: &DynamicImage, bound: Rect) -> DynamicImage {
+        let mut bottom = DynamicImage::new_rgba8(bound.w, bound.h);
 
-        image::imageops::overlay(&mut bottom, image, source_size.x, source_size.y);
+        image::imageops::overlay(&mut bottom, image, bound.x, bound.y);
 
         bottom
     }
