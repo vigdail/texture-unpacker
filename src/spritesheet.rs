@@ -23,23 +23,22 @@ impl SpriteSheet {
     }
 
     pub fn unpack(&mut self, path: &str) -> Result<(), ()> {
-        for (i, image) in self.sheet.frames.iter().enumerate() {
-            let image = image.clone();
-            let position = image.position;
-            let size = image.size;
+        for (i, frame) in self.sheet.frames.iter().enumerate() {
+            let position = frame.position;
+            let size = frame.size;
 
             let mut sprite: DynamicImage;
-            if image.rotated {
+            if frame.rotated {
                 sprite = self.sprite.crop(position.y, position.x, size.h, size.w);
             } else {
                 sprite = self.sprite.crop(position.x, position.y, size.w, size.h);
             };
 
-            if image.trimmed {
-                sprite = SpriteSheet::build(&sprite, image.bound);
+            if frame.trimmed {
+                sprite = SpriteSheet::build(&sprite, frame.bound);
             }
 
-            let s = &format!("{}/{}.png", path, &image.name);
+            let s = &format!("{}/{}.png", path, &frame.name);
             let path = std::path::Path::new(s);
             let dir = path.parent().unwrap();
             if !dir.exists() {
@@ -47,8 +46,8 @@ impl SpriteSheet {
             }
             let percent = (i + 1) as f32 / self.sheet.frames.len() as f32 * 100.0;
             match sprite.save(path) {
-                Ok(_) => println!("{}% saved: {}", percent as u32, image.name),
-                Err(e) => println!("{}% skipped: {}: {}", percent as u32, image.name, e),
+                Ok(_) => println!("{}% saved: {}", percent as u32, frame.name),
+                Err(e) => println!("{}% skipped: {}: {}", percent as u32, frame.name, e),
             }
         }
 
