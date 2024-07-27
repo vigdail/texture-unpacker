@@ -49,8 +49,8 @@ impl From<SubTexture> for Frame {
             },
             rotated: false,
             bound: Rect {
-                x: frame.frame_x.map(|x| x.abs() as u32).unwrap_or(0),
-                y: frame.frame_y.map(|y| y.abs() as u32).unwrap_or(0),
+                x: frame.frame_x.map(|x| x.unsigned_abs()).unwrap_or(0),
+                y: frame.frame_y.map(|y| y.unsigned_abs()).unwrap_or(0),
                 w: frame.frame_width.unwrap_or(frame.width),
                 h: frame.frame_height.unwrap_or(frame.height),
             },

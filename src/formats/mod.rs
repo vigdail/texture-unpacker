@@ -70,12 +70,12 @@ impl Atlas {
         let format = AtlasFormat::try_from(std::path::Path::new(path).extension().unwrap())?;
         match format {
             AtlasFormat::Json => Atlas::from_json(&buffer),
-            AtlasFormat::Xml => Atlas::from_xml(&buffer.as_str()),
+            AtlasFormat::Xml => Atlas::from_xml(buffer.as_str()),
         }
     }
 
     fn from_json(buffer: &str) -> Result<Atlas, Error> {
-        Ok(serde_json::from_str::<JsonArrayAtlas>(&buffer)?.into())
+        Ok(serde_json::from_str::<JsonArrayAtlas>(buffer)?.into())
     }
 
     fn from_xml(buffer: &str) -> Result<Atlas, Error> {

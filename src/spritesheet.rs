@@ -22,7 +22,7 @@ impl SpriteSheet {
         })
     }
 
-    pub fn unpack(&mut self, path: &str) -> Result<(), ()> {
+    pub fn unpack(&mut self, path: &str) -> Result<(), image::ImageError> {
         for (i, frame) in self.sheet.frames.iter().enumerate() {
             let position = frame.position;
             let size = frame.size;
@@ -47,7 +47,7 @@ impl SpriteSheet {
             let percent = (i + 1) as f32 / self.sheet.frames.len() as f32 * 100.0;
             match sprite.save(path) {
                 Ok(_) => println!("{}% saved: {}", percent as u32, frame.name),
-                Err(e) => println!("{}% skipped: {}: {}", percent as u32, frame.name, e),
+                Err(e) => return Err(e)
             }
         }
 

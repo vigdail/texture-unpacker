@@ -23,7 +23,7 @@ pub struct JsonArrayFrame {
     sprite_source_size: Rect,
     #[serde(rename = "sourceSize")]
     source_size: Size,
-    pivot: Option<Point>,
+    // pivot: Option<Point>,
 }
 
 impl From<JsonArrayFrame> for Frame {
