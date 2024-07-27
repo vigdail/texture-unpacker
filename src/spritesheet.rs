@@ -57,7 +57,7 @@ impl SpriteSheet {
     fn build(image: &DynamicImage, bound: Rect) -> DynamicImage {
         let mut bottom = DynamicImage::new_rgba8(bound.w, bound.h);
 
-        image::imageops::overlay(&mut bottom, image, bound.x, bound.y);
+        image::imageops::overlay(&mut bottom, image, bound.x as i64, bound.y as i64);
 
         bottom
     }
